@@ -1,0 +1,154 @@
+/* === GLOBAL RESET === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+/* === BACKGROUND IMAGE + OVERLAY (PERFECT LOOK) === */
+body {
+    background:
+        linear-gradient(
+            rgba(0, 0, 0, 0.45),
+            rgba(0, 0, 0, 0.45)
+        ),
+        url("bg2.jpg") no-repeat center center fixed;
+
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* === MAIN CONTAINER (GLASS EFFECT) === */
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    backdrop-filter: blur(12px);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* === SMOOTH FADE ANIMATION === */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* === HEADINGS === */
+h2, h3 {
+    text-align: center;
+    color: #fff;
+    font-size: 32px;
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.4);
+}
+
+/* === NAV BUTTONS ROW === */
+nav {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* === BUTTON STYLE (MODERN GRADIENT) === */
+.btn, button {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    background: linear-gradient(135deg, #00b4db, #0083b0);
+    text-decoration: none;
+    transition: 0.3s ease;
+    margin: 5px;
+}
+
+.btn:hover, button:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, #009ac6, #006688);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+/* === DELETE BUTTON === */
+.delete-btn {
+    background: linear-gradient(135deg, #ff416c, #d00036);
+}
+
+.delete-btn:hover {
+    background: linear-gradient(135deg, #c1113c, #910026);
+}
+
+/* === INPUT STYLING === */
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 12px;
+    border: none;
+    background: rgba(255,255,255,0.8);
+    font-size: 15px;
+    transition: 0.3s ease;
+}
+
+input:focus, select:focus {
+    background: #fff;
+    box-shadow: 0 0 10px #00b4db;
+    outline: none;
+}
+
+/* === CATEGORY TITLES === */
+.category-title {
+    background: rgba(255, 255, 255, 0.3);
+    padding: 10px 14px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #fff;
+    border-radius: 10px;
+    margin-top: 25px;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+}
+
+/* === TABLE STYLING === */
+table {
+    width: 100%;
+    margin-top: 15px;
+    border-collapse: collapse;
+    background: rgba(255,255,255,0.15);
+    border-radius: 14px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+th {
+    background: rgba(0,0,0,0.45);
+    color: white;
+    padding: 14px;
+    font-size: 17px;
+    letter-spacing: 0.5px;
+}
+
+td {
+    padding: 12px;
+    color: white;
+    text-align: center;
+}
+
+tr {
+    transition: 0.3s ease;
+}
+
+tr:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+/* === LOW STOCK HIGHLIGHT === */
+.low-stock {
+    color: #ff4b5c;
+    font-weight: bold;
+    text-shadow: 0 0 8px rgba(255,0,0,0.5);
+}

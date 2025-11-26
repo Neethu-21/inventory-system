@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Inventory Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="flex">
+
+<!-- Sidebar -->
+<aside class="bg-gray-900 text-white w-56 p-5 h-screen">
+  <h2 class="font-bold text-2xl mb-4">Inventory</h2>
+
+  <button onclick="location.href='dashboard.html'"
+    class="w-full text-left py-2 hover:bg-gray-700 rounded mb-1">Dashboard</button>
+
+  <button id="btnAddProduct" onclick="location.href='add-product.html'"
+    class="w-full text-left py-2 hover:bg-gray-700 rounded mb-1">Add Product</button>
+
+  <button onclick="location.href='billing.html'"
+    class="w-full text-left py-2 hover:bg-gray-700 rounded mb-1">Billing</button>
+
+  <button id="manageUsers" onclick="location.href='create-admin.html'"
+    class="w-full text-left py-2 hover:bg-gray-700 rounded mb-1">Manage Users</button>
+
+  <button onclick="logout()"
+    class="w-full bg-red-600 mt-5 py-2 rounded hover:bg-red-700">Logout</button>
+</aside>
+
+<!-- Main Content -->
+<main class="flex-1 p-6">
+  <h2 class="text-xl font-bold mb-3">Product List</h2>
+
+  <table class="w-full bg-white shadow rounded">
+    <thead class="bg-gray-300">
+      <tr>
+        <th class="py-2">Name</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Unit</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="body"></tbody>
+  </table>
+</main>
+
+</div>
+
+<script>
+function token() {
+  const t = localStorage.getItem("token");
+  if (!t) window.location.href = "index.html";
+  return t;
+}
+
+function logout() {
+  localStorage.clear();
+  location.href = "index.html";
+}
+
+function applyRoleUI() {
+  const role = localStorage.getItem("role");
+  if (role === "staff") {
+    document.getElementById("btnAddProduct").style.display = "none";
+  }
+  if (role !== "super_admin") {
+    document.getElementById("manageUsers").style.display = "none";
+  }
+}
+
+// LOAD PRODUCTS
+async function load() {
+  const res = await fetch("/api/products", {
+    headers: { "Authorization": "Bearer " + token() }
+  });
+
+  const data = await res.json();
+  body.innerHTML = "";
+
+  data.forEach(x => {
+    body.innerHTML += `
+      <tr class="border text-center">
+        <td class="py-2">${x.name}</td>
+        <td>${x.category}</td>
+        <td>₹${x.price}</td>
+        <td>${x.stock}</td>
+        <td>${x.unit}</td>
+        <td class="py-2">
+          <button onclick="deleteProduct('${x._id.toString()}')"
+            class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">
+            Delete
+          </button>
+        </td>
+      </tr>`;
+  });
+}
+
+// DELETE PRODUCT
+async function deleteProduct(id) {
+  const confirmDelete = confirm("Are you sure you want to delete this product?");
+  if (!confirmDelete) return;
+
+  const res = await fetch(`/api/products/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": "Bearer " + token(),
+      "Content-Type": "application/json"
+    }
+  });
+
+  const data = await res.json();
+  alert(data.message);
+  load(); // refresh
+}
+
+applyRoleUI();
+load();
+</script>
+
+</body>
+</html>

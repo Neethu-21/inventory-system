@@ -1,0 +1,10 @@
+{
+  "users": [
+    {
+      "username": "admin",
+      "password": "$2b$10$IsnwupN.8utNr2MLxrzBr.mgrzoB1kVZTEd525ulFq5dPO2BGJvAu",
+      "role": "super_admin"
+    }
+  ],
+  "products": []
+}

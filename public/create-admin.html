@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><script src="https://cdn.tailwindcss.com"></script><title>Create User</title></head>
+<body class="bg-gray-200 flex justify-center items-center min-h-screen">
+
+<div class="bg-white p-6 rounded shadow-md w-96">
+  <h2 class="text-xl font-bold mb-4">Create User</h2>
+
+  <input id="username" class="border w-full p-2 mb-2" placeholder="Username">
+  <input id="password" type="password" class="border w-full p-2 mb-2" placeholder="Password">
+
+  <select id="role" class="border w-full p-2 mb-4">
+    <option value="admin">Admin</option>
+    <option value="staff">Staff</option>
+  </select>
+
+  <button onclick="saveUser()" class="bg-blue-600 text-white w-full p-2 rounded">Create</button>
+  <p id="msg" class="mt-2 text-green-700"></p>
+</div>
+
+<script>
+function token(){const t=localStorage.getItem("token");if(!t)location.href="index.html";return t;}
+async function saveUser(){
+  const res=await fetch("/api/users",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer "+token()
+    },
+    body:JSON.stringify({
+      username:username.value,
+      password:password.value,
+      role:role.value
+    })
+  });
+  const d=await res.json();
+  msg.innerText=d.message;
+}
+</script>
+
+</body>
+</html>

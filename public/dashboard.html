@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+<div class="flex">
+
+<!-- Sidebar -->
+<aside class="bg-gray-900 text-white w-56 p-5 h-screen">
+  <h2 class="font-bold text-2xl mb-4">Dashboard</h2>
+
+  <button onclick="location.href='dashboard.html'"
+    class="w-full text-left py-2 bg-gray-700 rounded mb-1">Home</button>
+
+  <button onclick="location.href='view-products.html'"
+    class="w-full text-left py-2 hover:bg-gray-700 rounded mb-1">Products</button>
+
+  <button id="btnAddProduct" onclick="location.href='add-product.html'"
+    class="w-full text-left py-2 hover:bg-gray-700 rounded mb-1">Add Product</button>
+
+  <button onclick="location.href='billing.html'"
+    class="w-full text-left py-2 hover:bg-gray-700 rounded mb-1">Billing</button>
+
+  <button id="btnManageUsers" onclick="location.href='create-admin.html'"
+    class="w-full text-left py-2 hover:bg-gray-700 rounded mb-1">Manage Users</button>
+
+  <button onclick="logout()"
+    class="w-full bg-red-600 mt-5 py-2 rounded hover:bg-red-700">Logout</button>
+</aside>
+
+<!-- Main -->
+<main class="flex-1 p-6">
+  <h2 class="text-2xl font-bold mb-4">Overview</h2>
+
+  <div class="grid grid-cols-3 gap-4 mb-6">
+    <div class="bg-white shadow rounded p-4">
+      <p class="text-gray-500 text-sm">Total Products</p>
+      <p id="totalProducts" class="text-3xl font-bold mt-2">0</p>
+    </div>
+
+    <div class="bg-white shadow rounded p-4">
+      <p class="text-gray-500 text-sm">Low Stock (&lt; 5)</p>
+      <p id="lowStock" class="text-3xl font-bold text-orange-600 mt-2">0</p>
+    </div>
+
+    <div class="bg-white shadow rounded p-4">
+      <p class="text-gray-500 text-sm">Today Sales</p>
+      <p id="todaySales" class="text-3xl font-bold text-emerald-600 mt-2">₹0</p>
+    </div>
+  </div>
+
+  <p class="text-gray-500">More analytics (charts, reports) can be added here for your demo.</p>
+</main>
+
+</div>
+
+<script>
+function getToken(){
+  const t = localStorage.getItem("token");
+  if (!t) window.location.href = "index.html";
+  return t;
+}
+
+function logout(){
+  localStorage.clear();
+  window.location.href = "index.html";
+}
+
+function applyRoleUI(){
+  const role = localStorage.getItem("role");
+  if (role === "staff") {
+    document.getElementById("btnAddProduct").style.display = "none";
+  }
+  if (role !== "super_admin") {
+    document.getElementById("btnManageUsers").style.display = "none";
+  }
+}
+
+async function loadDashboard(){
+  const res = await fetch("/api/dashboard", {
+    headers: { "Authorization": "Bearer " + getToken() }
+  });
+
+  const data = await res.json();
+  document.getElementById("totalProducts").innerText = data.totalProducts ?? 0;
+  document.getElementById("lowStock").innerText = data.lowStock ?? 0;
+  document.getElementById("todaySales").innerText = "₹" + (data.todaySales ?? 0);
+}
+
+applyRoleUI();
+loadDashboard();
+</script>
+
+</body>
+</html>

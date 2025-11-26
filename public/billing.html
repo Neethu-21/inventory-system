@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><script src="https://cdn.tailwindcss.com"></script><title>Billing</title></head>
+<body class="bg-gray-200 p-6">
+
+<h2 class="text-xl font-bold mb-4">Billing</h2>
+
+<div class="flex gap-3 mb-3">
+<select id="product" class="border p-2 flex-1"></select>
+<input id="qty" type="number" value="1" min="1" class="border p-2 w-20">
+<button onclick="addItem()" class="bg-blue-600 text-white px-4 py-2 rounded">Add</button>
+</div>
+
+<table class="w-full bg-white shadow rounded mb-3">
+<thead class="bg-gray-100">
+<tr><th>Name</th><th>Qty</th><th>Price</th><th>Line Total</th></tr>
+</thead><tbody id="billBody"></tbody>
+</table>
+
+<h3 class="font-bold text-lg">Grand Total: ₹<span id="grand">0</span></h3>
+<button onclick="saveBill()" class="bg-green-700 text-white mt-4 px-4 py-2 rounded">Save Bill</button>
+
+<script>
+let list=[],cart=[];
+function token(){const t=localStorage.getItem("token");if(!t)location.href="index.html";return t;}
+async function load(){
+  const r=await fetch("/api/products",{headers:{"Authorization":"Bearer "+token()}});
+  list=await r.json();
+  product.innerHTML="<option value=''>Select product</option>";
+  list.forEach(p=>product.innerHTML+=`<option value="${p._id}">${p.name}</option>`);
+}
+function addItem(){
+  const id=product.value; if(!id) return;
+  const p=list.find(x=>x._id===id);
+  const q=Number(qty.value);
+  cart.push({productId:p._id,name:p.name,qty:q,price:p.price});
+  render();
+}
+function render(){
+  billBody.innerHTML=""; let total=0;
+  cart.forEach(x=>{
+    const lt = x.qty*x.price; total+=lt;
+    billBody.innerHTML+=`<tr><td>${x.name}</td><td>${x.qty}</td><td>₹${x.price}</td><td>₹${lt}</td></tr>`;
+  });
+  grand.innerText=total;
+}
+async function saveBill(){
+  const res=await fetch("/api/billing",{
+    method:"POST",
+    headers:{"Content-Type":"application/json","Authorization":"Bearer "+token()},
+    body:JSON.stringify({items:cart})
+  });
+  const d=await res.json(); alert(d.message);
+}
+load();
+</script>
+
+</body>
+</html>
